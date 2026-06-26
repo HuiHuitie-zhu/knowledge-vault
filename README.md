@@ -1,13 +1,12 @@
 <div align="center">
   <img src="assets/icon.svg" width="64" height="64" alt="Knowledge Vault">
   <h1>Knowledge Vault 🏛️</h1>
-  <p>个人知识库 + 知识图谱可视化系统</p>
-  <p><em>SQLite · FTS5 · 向量检索 · D3.js 力导向图 · Canvas 2D</em></p>
+  <p>个人知识库搭建方案 —— 从数据结构到应用体系</p>
+  <p><em>SQLite · FTS5 · 三层分层 · 语义关系 · 向量检索</em></p>
   <br>
   <p>
     <img src="https://img.shields.io/badge/Python-3.10+-blue?logo=python" alt="Python">
     <img src="https://img.shields.io/badge/SQLite-FTS5-003B57?logo=sqlite" alt="SQLite">
-    <img src="https://img.shields.io/badge/D3.js-v7-F9A03C?logo=d3.js" alt="D3.js">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT">
   </p>
 </div>
@@ -16,159 +15,26 @@
 
 ## 为什么要做这个？
 
-我积累了大量笔记、代码片段、项目文档和个人思考——散布在 Obsidian、Apple Notes、AI 对话记录里。我想要的不仅是文件夹里的 Markdown 文件，而是**看见知识之间的连接**——哪些主题有关联、哪些概念建立在哪些之上、哪里还有知识缺口。
+知识积累久了会散——这个 Obsidian，那个对话记录，还有随手存的代码片段。需要的不只是多一个文件夹来存，而是一套**结构化的知识组织体系**：知道什么该记、怎么分类、如何关联、积累到什么时候该升格。
 
-所以有了这个项目：一个**本地优先、隐私保护**的个人知识库系统，配上一个交互式的知识图谱可视化界面。
-
----
-
-## 系统预览
-
-```
-┌──────────────────────────────────────────────────────────┐
-│  知识图谱                          ☾                      │
-│  ┌──────────────────────────────┐  🔍 搜索节点...        │
-│  │                              │                         │
-│  │      ○━━━━━━○                │  [所有] [规则] [陷阱]  │
-│  │     ╱        ╲               │                         │
-│  │    ○          ○━━○           │  ● #42 配置要点        │
-│  │    │          │              │  ● #38 API 认证流程    │
-│  │    ○──────────○              │  ○ #15 错误码处理      │
-│  │     ╲        ╱               │                         │
-│  │      ○━━━━━━○                │  96 节点     30 显示    │
-│  └──────────────────────────────┘                         │
-│    关系: ━━ references ━━ uses ━━ part_of                 │
-│                                                           │
-│    滚轮 · 缩放 | 拖拽 · 平移 | 点击 · 查看 | Esc 关闭    │
-└──────────────────────────────────────────────────────────┘
-```
-
-### 核心交互
-
-| 操作 | 效果 |
-|------|------|
-| **点击节点** | 镜头聚焦到该节点及其关联节点（隐藏非关联节点），右侧弹出详情面板 |
-| **双击画布 / Esc** | 回到全局视图 |
-| **滚轮** | 缩放 |
-| **拖拽** | 平移画布 |
-| **搜索** | 按标题/标签过滤 |
-| **类型过滤** | 按规则/陷阱/引用等类型筛选 |
-| **日夜切换** | ☽ / ☀ |
-| **置顶** | ☆ 标记重要节点，置顶在列表顶部 |
+所以有了这个项目：一个**本地优先、隐私保护**的个人知识库系统，核心是 SQLite 层面的数据结构和组织方法论。知识图谱可视化只是它的一种应用方式。
 
 ---
 
-## ✨ 核心功能
+## ✨ 核心能力
 
-| 特性 | 说明 |
+| 能力 | 说明 |
 |------|------|
-| **本地优先** | 所有数据存在 SQLite 里，不依赖任何云服务，数据完全在你手里 |
-| **双擎搜索** | FTS5 全文搜索 + BGE 语义向量搜索，关键词和语义理解双重覆盖 |
-| **三级分层** | L0 铁律（人格底线）→ L1 认知校准器（行为规则）→ L2 知识记录库（参考），三层隔离防止认知污染 |
+| **本地优先** | 所有数据存在 SQLite 里，不依赖任何云服务 |
+| **三级分层** | L0 铁律 → L1 认知校准器 → L2 知识记录库，三层隔离防止认知污染 |
 | **关系类型体系** | 10 种语义边（引用/使用/扩展/矛盾/相似...），关系不只是一种 |
-| **交互式知识图谱** | D3.js 力导向布局 + Canvas 2D 渲染，点击节点聚焦关联网 |
-| **Linear 暗色设计** | 深色三层背景、Inter 字体、靛蓝交互色、700ms easeOutCubic 缓动 |
-| **原生桌面应用** | macOS WKWebView 封装，双击即用，关闭即停，无后台残留 |
-| **健康可观测** | `/api/health` 端点 + stats 红黄绿评分 + ctl.sh 真健康检测，不只看端口活着 |
+| **双擎搜索** | FTS5 全文搜索 + BGE 语义向量搜索，关键词和语义双重覆盖 |
+| **CLI + MCP** | 命令行工具 + MCP 协议服务器，可被任何 AI Agent 调用 |
 | **夜间自动维护** | Dream Cycle 定时重建索引、合并清理、写入日志 |
-| **自动知识提取** | 双 Agent 从对话中自动提炼可复用知识存入知识库 |
 
 ---
 
-## 🏗 系统架构
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│                         Knowledge Vault                           │
-├──────────────┬──────────────────────────┬─────────────────────────┤
-│   CLI 工具   │      MCP 服务器           │    知识图谱可视化       │
-│              │                          │                         │
-│  vault.py    │  knowledge_mcp.py        │  server.py (API)        │
-│  ──────────  │  ──────────────────      │  ───────────────       │
-│  add / search│  knowledge_search        │  GET /api/data          │
-│  list / stats│  knowledge_hybrid_search │  GET /api/node?id=N     │
-│  reindex     │  knowledge_semantic_search│  GET /api/pin?id=N      │
-│  consolidate │  knowledge_list          │  GET /api/health        │
-│              │  knowledge_get           │  GET / → index.html     │
-│              │  knowledge_graph         │                         │
-│              │  knowledge_graph         │  index.html (前端)       │
-│              │                          │  ├── D3.js v7           │
-├──────────────┴──────────────────────────┤  ├── Canvas 2D          │
-│                                         │  └── Linear Design      │
-│           SQLite + FTS5 + 向量嵌入      │                         │
-│           vault.db                        │  kgraph-native          │
-│                                         │  (WKWebView 原生应用)    │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-### 数据流向
-
-```
-用户输入 → vault.py / MCP → 结构化笔记 → SQLite 存储 → 图谱数据 API → D3 渲染
-                                  ↕
-                           FTS5 索引 + 向量嵌入
-                                  ↕
-                            Dream Cycle 夜间维护
-```
-
----
-
-## 🚀 快速开始
-
-### 前置要求
-
-- Python 3.10+
-- SQLite 3 (系统自带 macOS/Linux)
-
-### 安装
-
-```bash
-# 克隆
-git clone https://github.com/HuiHuitie-zhu/knowledge-vault.git
-cd knowledge-vault
-
-# 安装依赖（推荐用 uv 或 venv）
-pip install -r requirements.txt
-
-# 构建数据库 + 添加示例数据
-python3 vault.py init
-python3 seed.py
-
-# 启动知识图谱服务器
-python3 server.py
-
-# 打开浏览器
-open http://localhost:51420
-```
-
-### 基本命令
-
-```bash
-# 添加一条笔记
-python3 vault.py add "Python 装饰器" "装饰器是修改函数行为的函数..." --tags python,技巧 --type reference
-
-# 添加笔记时建立关联
-python3 vault.py add "Functools 模块" "内置高阶函数工具集..." --link-to 1 --link-type uses
-
-# 搜索
-python3 vault.py search "装饰器"
-
-# 语义搜索（需要向量模型）
-python3 vault.py search "函数增强" --semantic
-
-# 查看统计
-python3 vault.py stats
-
-# 重建索引
-python3 vault.py reindex [--graph]
-
-# 合并检查
-python3 vault.py consolidate
-```
-
----
-
-## 📦 核心设计详解
+## 📦 知识库核心设计
 
 ### 1. 三级分层体系（L0 / L1 / L2）
 
@@ -177,133 +43,39 @@ python3 vault.py consolidate
 | 层 | 作用 | 写入原则 |
 |----|------|----------|
 | **L2 知识记录库** | 存资料、想法、项目背景、小说设定、工具经验、行业信息 | **尽管装**。它是仓库、书房、杂物间、灵感收纳箱 |
-| **L1 认知校准器** | 存会影响铁柱判断和行为的规则、偏好、教训、决策边界 | **慎重提炼**。只有经过验证、反复使用、确实会影响行为的知识才升级到 L1 |
-| **L0 铁律** | 铁柱的人格底线、不可违反的底层规则 | **极少写入**。只有"几乎不该变"的才放这里 |
+| **L1 认知校准器** | 存会影响 Agent 判断和行为的规则、偏好、教训、决策边界 | **慎重提炼**。只有经过验证、反复使用、确实会影响行为的知识才升级到 L1 |
+| **L0 铁律** | Agent 的人格底线、不可违反的底层规则 | **极少写入**。只有"几乎不该变"的才放这里 |
 
 **跨层原则：** L2 随便记 → 反复出现、验证有效 → L1 方法/规则 → 几乎不该变 → L0 铁律。
 
 真正要避免的不是"记录知识太多"，而是**参考资料不小心变成行为准则**。存一篇文章说"某某做法很好"是资料；但如果系统把它当成"用户一定认同这个做法"，就是认知污染。
 
-### 2. Typed Edges 关系类型体系
+### 2. 关系类型体系
 
-大多数知识图谱只有一种关系——"关联"。但这远远不够。Knowledge Vault 定义了 10 种语义边，每条连接都带有明确的含义：
+定义 10 种语义边，每条连接都带有明确含义：
 
-| 关系类型 | 语义 | 图谱着色 | 自动推断条件 |
-|----------|------|---------|-------------|
-| `references` | 通用引用 | 淡紫灰 `#5a5a7a` | 标签有重叠 |
-| `related_to` | 泛关联 | 淡紫灰 `#5a5a7a` | 仅标题重叠 |
-| `works_at` | 工作关系 | 靛蓝 `#5e6ad2` | tag 含"公司/项目" |
-| `created` | 创建关系 | 绿色 `#22c55e` | — |
-| `uses` | 使用关系 | 绿色 `#22c55e` | tag 含"tool/cli/API" |
-| `mentions` | 提及 | 灰色 `#94a3b8` | — |
-| `builds_on` | 扩展/升级 | 琥珀 `#f59e0b` | 标题含"V{数字}/升级" |
-| `contradicts` | 矛盾 | 红色 `#ef4444` | — |
-| `similar_to` | 相似 | 紫色 `#8b5cf6` | 同 domain + 共同 tag |
-| `part_of` | 子集 | 蓝紫 `#6366f1` | — |
+| 关系类型 | 语义 | 自动推断条件 |
+|----------|------|-------------|
+| `references` | 通用引用 | 标签有重叠 |
+| `related_to` | 泛关联 | 仅标题重叠 |
+| `uses` | 使用关系 | tag 含"tool/cli/API" |
+| `builds_on` | 扩展/升级 | 标题含"V{数字}/升级" |
+| `contradicts` | 矛盾 | — |
+| `similar_to` | 相似 | 同 domain + 共同 tag |
+| `part_of` | 子集 | — |
+| `works_at` | 工作关系 | tag 含"公司/项目" |
+| `created` | 创建关系 | — |
+| `mentions` | 提及 | — |
 
-**自动与手动隔离：** 自动推断的关联（`reindex --graph` 生成）和手动创建的关联（`add --link-to` 指定）在数据库中用 `link_source` 字段隔离。`reindex --graph` 只清除自动关联，手动关联永远被保护，不会在重建时丢失。
+**自动与手动隔离：** 自动推断的关联和手动创建的关联用 `link_source` 字段隔离，重建时不混肴。
 
-### 3. 双擎搜索引擎
+### 3. 双擎搜索
 
-```
-┌─────────────┐     ┌────────────────┐
-│ 关键词查询   │     │  语义查询       │
-│  (FTS5)     │     │  (BGE 向量)    │
-├─────────────┤     ├────────────────┤
-│ 精确匹配    │     │ 理解意图        │
-│ 支持中文     │     │ 同义词扩展     │
-│ 毫秒级响应   │     │ 模糊匹配       │
-│ 适合搜索已知 │     │ 适合探索未知   │
-└─────────────┘     └────────────────┘
-```
-
-- **FTS5 全文索引** — SQLite 内置，无外部依赖，支持中文分词（jieba）
-- **BGE 语义向量** — 512 维嵌入，基于 `BAAI/bge-small-zh-v1.5`，~50MB 模型
+- **FTS5 全文索引** — SQLite 内置，无外部依赖，支持中文分词
+- **BGE 语义向量** — 512 维嵌入，基于 `BAAI/bge-small-zh-v1.5`
 - **混合策略** — 先用 FTS5 精确匹配，无结果时回退到语义搜索
 
-### 4. 知识图谱可视化
-
-#### 渲染引擎
-
-选择 **Canvas 2D + D3.js** 的组合而非纯 SVG：
-
-| 方案 | 优点 | 缺点 |
-|------|------|------|
-| SVG (原生 D3) | 开发快，事件绑定方便 | 100+ 节点 DOM 太重，卡顿 |
-| WebGL (Three.js) | 性能最好 | 开发成本高，3D 在此场景无意义 |
-| **Canvas 2D + D3** | 性能好，开发适中 | 需手动处理 hit-testing |
-
-**关键代码** — Canvas 坐标转换：
-
-```javascript
-// 画布变换管线
-cx.save();
-cx.translate(W/2, H/2);    // 原点移到画布中心
-cx.scale(Z, Z);             // 缩放
-cx.translate(OX, OY);       // 平移偏移
-// ... 在 D3 的 (x,y) 坐标上绘制节点和边
-cx.restore();
-
-// 屏幕坐标 → 图谱坐标（用于点击判定）
-function gp(e) {
-  var r = cv.getBoundingClientRect();
-  return {
-    x: (e.clientX - r.left - W/2) / Z - OX,
-    y: (e.clientY - r.top - H/2) / Z - OY
-  };
-}
-```
-
-#### D3 力导向布局调参
-
-```javascript
-var sim = d3.forceSimulation(N)
-  .force('link', d3.forceLink(L).distance(25).strength(1.0))
-  .force('charge', d3.forceManyBody().strength(-30))
-  .force('center', d3.forceCenter())
-  .force('collide', d3.forceCollide().radius(function(d) {
-    return 6 + (d.ds || 0) * 2;  // 按节点度数自适应
-  }))
-  .alphaDecay(0.03)    // 约 3 秒稳定
-  .velocityDecay(0.4);
-```
-
-**设计原则：** 紧凑但不挤——`strength=-30` + `distance=25` 产生紧密的群落结构，让相关节点聚在一起。
-
-#### 性能优化
-
-| 优化点 | 措施 | 效果 |
-|--------|------|------|
-| Tick 渲染节流 | 每 3 帧渲染一次 | CPU 降至 1/3 |
-| 事件驱动渲染 | 只有用户操作时才重绘 | 非交互期零 CPU |
-| 选中节点呼吸 | 只用 sin() 动画选中节点 | 避免全节点计算 |
-| 无 shadowBlur | 用 globalAlpha 替代 | Canvas 渲染避免昂贵阴影计算 |
-| 隐藏非关联节点 | 聚焦时完全跳过绘制 | 渲染量降 90%+ |
-
-#### 连接网络视图（Connection Network View）
-
-这是最核心的交互设计——点击一个节点后：
-
-1. 选中节点 + 它的直接邻居（1-hop）保持可见
-2. 所有非关联节点完全隐藏
-3. 镜头缓推聚焦到关联子图
-4. 边按关系类型着色，选中边高亮
-5. 右侧弹出详情面板，显示完整内容和关联节点
-
-这个设计让你在面对 100+ 节点的图谱时不迷失——每次只关注一个节点的"朋友圈"。
-
-### 5. 视觉效果：Linear 暗色设计系统
-
-```
-背景: #08090a (最深) → #0f1011 (面板) → #191a1b (浮层)
-文字: #f7f8f8 (主要) → #d0d6e0 (正文) → #8a8f98 (辅助) → #62666d (元数据)
-交互: #5e6ad2 (靛蓝)
-字体: Inter (英文) + PingFang SC (中文)
-节点: 节点按类型着色，规则蓝 / 陷阱绿 / 引用紫 / 标准黄...
-缓动: 700ms easeOutCubic (所有镜头移动)
-```
-
-### 6. 条目格式：Compiled Truth + Timeline
+### 4. 条目格式
 
 每个知识条目采用双层结构：
 
@@ -320,40 +92,127 @@ var sim = d3.forceSimulation(N)
 为什么要做这个决策，有什么上下文？
 ```
 
-这个格式受 [GBrain](https://github.com/raymondwzhao/gbrain) 项目启发。
+### 5. 数据库 Schema
 
-### 7. Dream Cycle 夜间自动维护
+核心表结构（完整定义见 `schema.sql`）：
 
-```
-每日凌晨 2:00 ───── 5 阶段流水线 ───── 写入日志
-      │
-      ├─ 1. Lint       : 健康快照
-      ├─ 2. Consolidate: 查重复/低质量
-      ├─ 3. Sync       : 重建向量索引
-      ├─ 4. Graph      : 重建图谱关联 + 类型推断
-      └─ 5. Report     : 最终快照对比
-```
-
-全程零 token 消耗（no-agent 模式），结果写入一条日志笔记，可随时查阅。
+| 表 | 用途 |
+|:---|:-----|
+| `notes` | 笔记主体（标题、内容、类型、层级、领域、置信度、标签文本、使用统计） |
+| `tags` / `note_tags` | 标签体系，多对多关联 |
+| `links` | 有向语义边（类型、上下文、来源） |
+| `note_links` | 兼容的双向关联表 |
+| `note_embeddings` | 向量嵌入存储 |
+| `notes_fts` | FTS5 全文搜索虚拟表（触发器自动同步） |
 
 ---
 
-## 🖥 原生 macOS 桌面应用
+## 🚀 快速开始
+
+### 前置要求
+
+- Python 3.10+
+- SQLite 3（系统自带）
+
+### 安装
+
+```bash
+git clone https://github.com/HuiHuitie-zhu/knowledge-vault.git
+cd knowledge-vault
+pip install -r requirements.txt
+python3 vault.py init
+```
+
+### 基本用法
+
+```bash
+# 添加一条笔记
+python3 vault.py add "Python 装饰器" "装饰器是修改函数行为的函数..." --tags python,技巧 --type reference
+
+# 添加时建立关联
+python3 vault.py add "Functools 模块" "内置高阶函数工具集..." --link-to 1 --link-type uses
+
+# 搜索
+python3 vault.py search "装饰器"
+
+# 语义搜索
+python3 vault.py search "函数增强" --semantic
+
+# 查看统计
+python3 vault.py stats
+
+# 重建索引 + 图谱关联推断
+python3 vault.py reindex [--graph]
+
+# 合并检查（查重 + 低质量检测）
+python3 vault.py consolidate
+```
+
+### 写入分类原则
+
+添加笔记时指定合适的 `--type`：
+
+| type | 用途 |
+|:-----|:-----|
+| `rule` | 规则、铁律（layer=0） |
+| `standard` | 流程标准（layer=1） |
+| `trap` | 踩坑记录 |
+| `checklist` | 检查清单 |
+| `case` | 具体案例 |
+| `reference` | 参考资料、配置说明 |
+| `doc` | 文档 |
+| `note` | 一般笔记（默认） |
+
+---
+
+## 📖 延伸阅读
+
+以下内容与核心知识库设计解耦，单独阅读：
+
+### 知识图谱可视化
+
+这个仓库附带了一个 D3.js + Canvas 2D 的知识图谱前端，支持力导向布局、类型过滤、点击聚焦、日夜切换等功能。
+
+> **注意：** 这个前端**仅提供设计思路参考**。你完全可以用 D3.js、Sigma.js、vis-network 甚至直接查数据库做自己的可视化。按技术栈和审美来。
+
+启动方式：
+
+```bash
+python3 seed.py   # 生成示例数据
+python3 server.py # 启动 API + 前端
+open http://localhost:51420
+```
+
+### 跨 Agent 知识共享
+
+Knowledge Vault 通过 **MCP（Model Context Protocol）** 让多个 Agent 共享同一个知识库：
 
 ```
-知识图谱.app/
-└── Contents/
-    ├── MacOS/
-    │   ├── kgraph              # bash 生命周期脚本
-    │   └── kgraph-native       # 编译的 Swift 二进制 (~90KB)
-    ├── Resources/
-    │   └── icon.icns           # 完整 Retina 图标集
-    └── Info.plist              # ATS + Retina 配置
+SQLite ←→ MCP 服务器 ←→ Claude Code / Cursor / 自定义 Agent
 ```
 
-**生命周期设计：** 双击打开 → 启动后端 → 等待就绪 → 打开 WKWebView 窗口（无浏览器工具栏）→ 关闭窗口 → 自动停止后端。双击即用、关闭即停，**不留任何后台残留进程**。
+注册方式（`.mcp.json`）：
 
-原生 WKWebView 使用 Safari 的底层渲染引擎，相比 Electron 方案节省约 200MB 内存。
+```json
+{
+  "mcpServers": {
+    "knowledge-base": {
+      "command": "python3",
+      "args": ["/path/to/scripts/knowledge_mcp.py"]
+    }
+  }
+}
+```
+
+Agent 通过 MCP 工具直接读写知识库：`knowledge_search` / `knowledge_add` / `knowledge_update` 等。Agent A 写入的经验，Agent B 立刻可查——无需同步、无需复制。
+
+### Dream Cycle 夜间维护
+
+定时（每日凌晨）自动执行：健康检查 → 查重合并 → 重建向量索引 → 图谱关联推断 → 报告写入。
+
+### macOS 原生桌面应用
+
+WKWebView 封装的知识图谱桌面端，双击即用、关闭即停，比 Electron 方案节省约 200MB 内存。
 
 ---
 
@@ -362,13 +221,12 @@ var sim = d3.forceSimulation(N)
 | 层 | 技术 |
 |----|------|
 | **存储** | SQLite 3 + FTS5 |
-| **全文搜索** | SQLite FTS5 + jieba 中文分词 |
-| **语义搜索** | BGE (BAAI/bge-small-zh-v1.5) 512-dim 向量 |
-| **API 服务器** | Python http.server (~42 lines) |
-| **图谱前端** | D3.js v7 (forceSimulation) + Canvas 2D |
-| **设计系统** | Linear 暗色精工风格 |
-| **桌面应用** | WKWebView (Swift) |
-| **Markdown 渲染** | marked.js |
+| **全文搜索** | SQLite FTS5 + 中文分词 |
+| **语义搜索** | BGE (BAAI/bge-small-zh-v1.5) 512-dim |
+| **API 服务器** | Python http.server |
+| **CLI 工具** | Python（`vault.py`） |
+| **MCP 服务器** | Python（`knowledge_mcp.py`） |
+| **图谱前端** | D3.js v7 + Canvas 2D |
 
 ---
 
@@ -376,62 +234,44 @@ var sim = d3.forceSimulation(N)
 
 ```
 knowledge-vault/
-├── README.md              # 本文档
-├── server.py              # HTTP API 服务器（~50 行）
-├── index.html             # 知识图谱可视化前端（单 HTML 文件）
-├── vault.py               # CLI 工具（增删查改）
-├── seed.py                # 示例数据生成器
-├── schema.sql             # 数据库 DDL
-├── setup.sh               # 一键安装脚本
-├── requirements.txt       # Python 依赖
+├── README.md          # 本文档
+├── schema.sql         # 数据库 DDL（核心！）
+├── vault.py           # CLI 工具（增删查改 + 重建 + 合并）
+├── server.py          # HTTP API 服务器
+├── index.html         # 知识图谱可视化前端（参考实现）
+├── seed.py            # 示例数据生成器
+├── setup.sh           # 一键安装脚本
+├── requirements.txt   # Python 依赖
 ├── assets/
-│   └── icon.svg           # 项目图标
-└── LICENSE                # MIT
+│   └── icon.svg       # 项目图标
+└── LICENSE            # MIT
 ```
 
 ---
 
-## 📊 实际跑出来的数据
-
-这是演示数据跑出来的效果。你自己的知识库会完全不同——取决于你记了什么、怎么组织的。
-
-```
-笔记: ~100  标签: ~200  关联: ~150
-三层分层: L0（铁律）→ L1（规范）→ L2（参考）
-```
-
----
-
-## 🤔 设计决策笔记
-
-### 为什么用 Canvas 2D 而不是 SVG？
-
-当节点数超过 100 时，SVG DOM 节点数会导致浏览器 layout 卡顿。Canvas 2D 把绘制交给 GPU，同时保留清晰度为文字渲染保留了足够精度。WebGL（Three.js）在 2D 力导向图场景下大材小用。
+## 设计决策
 
 ### 为什么 SQLite 而不是 PostgreSQL / Neo4j？
 
-第一原则：**本地优先**。整个知识库在单文件里随身携带，不需要运行数据库服务器。FTS5 是 SQLite 的隐藏杀手锏，全文搜索能力不输 Elasticsearch 的小规模场景。图数据库对 100-1000 级别的节点过度设计——关系型 + 连接表在这个规模上绰绰有余，且无需额外运维。
+第一原则：**本地优先**。整个知识库在单文件里随身携带，不需要运行数据库服务器。FTS5 是 SQLite 的隐藏杀手锏，全文搜索能力不输 Elasticsearch 的小规模场景。图数据库对 100-1000 级别的节点过度设计——关系型 + 连接表在这个规模上绰绰有余。
 
 ### Typed Edges 为什么重要？
 
-大多数知识工具只告诉你"两个东西有关"，但不告诉你怎么关联的。知道 A "引用" B 和知道 A "矛盾" B 是完全不同的信息熵。带语义的边让图谱不只是"好看"，而是可推理的——可以问"哪些引用已经过时"、"哪个方案扩展自哪个"、"谁和谁存在矛盾需要解决"。
+大多数知识工具只告诉你"两个东西有关"，但不告诉你怎么关联的。知道 A "引用" B 和知道 A "矛盾" B 是完全不同的信息熵。带语义的边让图谱不只是"好看"，而是可推理的。
+
+### 为什么用 Canvas 2D 而不是 SVG？
+
+当节点数超过 100 时，SVG DOM 节点数会导致浏览器 layout 卡顿。Canvas 2D 把绘制交给 GPU。WebGL（Three.js）在 2D 力导向图场景下大材小用。
 
 ---
 
 ## 📖 灵感来源
 
-- [GBrain](https://github.com/raymondwzhao/gbrain) — Garry Tan 的个人知识库项目，启发了 Compiled Truth + Timeline 格式和 Typed Edges 体系
-- [Linear.app 设计系统](https://linear.app/) — 暗色精工美学的参考
-- [Hermes Agent](https://github.com/NousResearch/hermes) — 运行这个系统的 AI Agent 框架
+- [GBrain](https://github.com/raymondwzhao/gbrain) — 条目格式（Compiled Truth + Timeline）受此启发
+- [Hermes](https://github.com/NousResearch/hermes) — 运行这个系统的 AI Agent 框架
 
 ---
 
 ## 📄 License
 
-MIT
-
----
-
-<p align="center">
-  <i>Built with curiosity, not with a plan.</i>
-</p>
+MIT — Built with curiosity, not with a plan.
