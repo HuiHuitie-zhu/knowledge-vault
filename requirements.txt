@@ -1,0 +1,12 @@
+# Python dependencies
+# Core
+sqlite3>=3.0.0
+
+# Full-text search (optional for Chinese tokenization)
+# jieba>=0.42.1
+
+# Semantic search (optional)
+# fastembed>=0.3.0
+# numpy>=1.24.0
+
+# Note: sqlite3 and http.server are stdlib, no pip install needed
