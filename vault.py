@@ -207,8 +207,9 @@ def cmd_search(args):
 
     query = args.query
     rows = conn.execute(
-        "SELECT id, title, source_type, tags_text, substr(content_raw, 1, 120) AS preview "
-        "FROM notes_fts WHERE notes_fts MATCH ? ORDER BY rank LIMIT 10",
+        "SELECT n.id, n.title, n.source_type, n.tags_text, substr(n.content_raw, 1, 120) AS preview "
+        "FROM notes n WHERE n.id IN (SELECT rowid FROM notes_fts WHERE notes_fts MATCH ?) "
+        "LIMIT 10",
         (query,)
     ).fetchall()
     conn.close()
