@@ -23,14 +23,14 @@
 
 ## ✨ 核心能力
 
-| 能力 | 说明 |
-|------|------|
-| **本地优先** | 所有数据存在 SQLite 里，不依赖任何云服务 |
-| **三级分层** | L0 铁律 → L1 认知校准器 → L2 知识记录库，三层隔离防止认知污染 |
-| **关系类型体系** | 10 种语义边（引用/使用/扩展/矛盾/相似...），关系不只是一种 |
-| **双擎搜索** | FTS5 全文搜索 + BGE 语义向量搜索，关键词和语义双重覆盖 |
-| **CLI + MCP** | 命令行工具 + MCP 协议服务器，可被任何 AI Agent 调用 |
-| **夜间自动维护** | Dream Cycle 定时重建索引、合并清理、写入日志 |
+| 能力 | 说明 | 状态 |
+|------|------|------|
+| **本地优先** | 所有数据存在 SQLite 里，不依赖任何云服务 | ✅ 全量开源 |
+| **三级分层** | L0 铁律 → L1 认知校准器 → L2 知识记录库，三层隔离防止认知污染 | ✅ 全量开源 |
+| **关系类型体系** | 10 种语义边（引用/使用/扩展/矛盾/相似...），关系不只是一种 | ✅ 全量开源 |
+| **双擎搜索** | FTS5 全文搜索 + BGE 语义向量搜索，关键词和语义双重覆盖 | ✅ 全量开源（语义搜索需 `pip install fastembed`） |
+| **CLI + MCP** | 命令行工具 + MCP 协议服务器，可被任何 AI Agent 调用 | ✅ 全量开源 |
+| **夜间自动维护** | Dream Cycle 定时重建索引、合并清理、写入日志 | 🔒 私有部署 |
 
 ---
 
@@ -173,6 +173,10 @@ python3 vault.py consolidate
 
 这个仓库附带了一个 D3.js + Canvas 2D 的知识图谱前端，支持力导向布局、类型过滤、点击聚焦、日夜切换等功能。
 
+<p align="center">
+  <img src="assets/graph-preview.png" width="80%" alt="Knowledge Graph 预览">
+</p>
+
 > **注意：** 这个前端**仅提供设计思路参考**。你完全可以用 D3.js、Sigma.js、vis-network 甚至直接查数据库做自己的可视化。按技术栈和审美来。
 
 启动方式：
@@ -198,11 +202,13 @@ SQLite ←→ MCP 服务器 ←→ Claude Code / Cursor / 自定义 Agent
   "mcpServers": {
     "knowledge-base": {
       "command": "python3",
-      "args": ["/path/to/scripts/knowledge_mcp.py"]
+      "args": ["path/to/knowledge_mcp.py"]
     }
   }
 }
 ```
+
+MCP 服务器通过环境变量 `KNOWLEDGE_DB_PATH` 指定数据库路径，默认使用同目录下的 `vault.db`。也可通过 `.env` 文件配置（参见 `.env.example`）。
 
 Agent 通过 MCP 工具直接读写知识库：`knowledge_search` / `knowledge_add` / `knowledge_update` 等。Agent A 写入的经验，Agent B 立刻可查——无需同步、无需复制。
 
@@ -234,17 +240,19 @@ WKWebView 封装的知识图谱桌面端，双击即用、关闭即停，比 Ele
 
 ```
 knowledge-vault/
-├── README.md          # 本文档
-├── schema.sql         # 数据库 DDL（核心！）
-├── vault.py           # CLI 工具（增删查改 + 重建 + 合并）
-├── server.py          # HTTP API 服务器
-├── index.html         # 知识图谱可视化前端（参考实现）
-├── seed.py            # 示例数据生成器
-├── setup.sh           # 一键安装脚本
-├── requirements.txt   # Python 依赖
+├── README.md            # 本文档
+├── schema.sql           # 数据库 DDL（核心！）
+├── vault.py             # CLI 工具（增删查改 + 重建 + 合并）
+├── knowledge_mcp.py     # MCP 协议服务器（AI Agent 直接调用）
+├── server.py            # HTTP API + 知识图谱前端服务器
+├── index.html           # 知识图谱可视化前端（参考实现）
+├── seed.py              # 示例数据生成器
+├── setup.sh             # 一键安装脚本
+├── requirements.txt     # Python 依赖
+├── .env.example         # 环境变量配置模板
 ├── assets/
-│   └── icon.svg       # 项目图标
-└── LICENSE            # MIT
+│   └── icon.svg         # 项目图标
+└── LICENSE              # MIT
 ```
 
 ---

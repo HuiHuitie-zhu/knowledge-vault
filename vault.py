@@ -199,13 +199,57 @@ def cmd_list(args):
 
 def cmd_search(args):
     conn = get_conn()
-    if args.semantic:
-        print("[vault] Semantic search requires BGE embedding model.")
-        print("[vault] Install: pip install fastembed")
-        print("[vault] Then: from fastembed import TextEmbedding")
-        print("[vault] Falling back to FTS5...")
-
     query = args.query
+
+    if args.semantic:
+        try:
+            from fastembed import TextEmbedding
+            import numpy as np
+
+            embedder = TextEmbedding(model_name="BAAI/bge-small-zh-v1.5")
+            query_vec = np.array(list(embedder.query_embed(query))[0])
+
+            embeddings = conn.execute(
+                "SELECT ne.note_id, ne.embedding FROM note_embeddings ne"
+            ).fetchall()
+
+            scored = []
+            for row in embeddings:
+                stored = np.frombuffer(row["embedding"], dtype=np.float32)
+                score = float(
+                    np.dot(query_vec, stored)
+                    / (np.linalg.norm(query_vec) * np.linalg.norm(stored))
+                )
+                scored.append((row["note_id"], score))
+
+            scored.sort(key=lambda x: x[1], reverse=True)
+            top_ids = [s[0] for s in scored[:10]]
+
+            rows = conn.execute(
+                f"SELECT n.id, n.title, n.source_type, n.tags_text, "
+                f"substr(n.content_raw, 1, 120) AS preview "
+                f"FROM notes n WHERE n.id IN ({','.join('?' for _ in top_ids)})",
+                top_ids,
+            ).fetchall()
+            conn.close()
+
+            if not rows:
+                print(f"[vault] No semantic results for '{query}'")
+                return
+
+            print(f"[vault] Semantic results for '{query}':")
+            for r in rows:
+                print(f"  #{r['id']} [{r['source_type']}] {r['title']}")
+                print(f"       {r['preview'][:80]}...")
+            return
+
+        except ImportError:
+            print("[vault] Semantic search requires: pip install fastembed numpy")
+            print("[vault] Falling back to FTS5...")
+        except Exception as e:
+            print(f"[vault] Semantic search failed: {e}")
+            print("[vault] Falling back to FTS5...")
+
     rows = conn.execute(
         "SELECT n.id, n.title, n.source_type, n.tags_text, substr(n.content_raw, 1, 120) AS preview "
         "FROM notes n WHERE n.id IN (SELECT rowid FROM notes_fts WHERE notes_fts MATCH ?) "
