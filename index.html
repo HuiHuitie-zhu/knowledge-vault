@@ -460,7 +460,7 @@ function showDetail(n){
   var dtb=document.getElementById('dtb');
   var dtg=document.getElementById('dtg');
   var dtl=document.getElementById('dtl');
-  document.getElementById('dti').textContent=n.n||'';
+  document.getElementById('dti').textContent='#'+n.i+' '+(n.n||'');
   var bg=NC[n.tp]||'#94a3b8';
   document.getElementById('dbg').style.background=bg;
   document.getElementById('dbg').textContent=n.tp||'note';
