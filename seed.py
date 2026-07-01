@@ -45,10 +45,11 @@ def seed():
 
     for n in notes:
         nid, title, content, stype, tags = n
+        tag_text = " ".join(t.strip() for t in tags.split(",") if t.strip())
         conn.execute(
             "INSERT INTO notes (id, title, content_raw, summary_raw, tags_text, source_type) "
             "VALUES (?, ?, ?, ?, ?, ?)",
-            (nid, title, content, content[:200], tags, stype)
+            (nid, title, content, content[:200], tag_text, stype)
         )
 
     # ─── Tags ─────────────────────────────────────────────────────────────────
